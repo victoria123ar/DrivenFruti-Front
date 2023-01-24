@@ -61,7 +61,7 @@ function Home() {
           </ul>
         </div>
         <div>
-          {products.map((product) => <Product product={product} />)}
+          {products.map((product, index) => <Product key={index} product={product} />)}
         </div>
       </StyledMain>
     </div>

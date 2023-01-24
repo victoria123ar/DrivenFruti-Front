@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 function Product({ product }) {
@@ -10,7 +10,11 @@ function Product({ product }) {
     productId,
   } = product;
 
-  console.log(thumbnail)
+  const [quantity, setQuantity] = useState(0);
+
+  function addToCart() {
+
+  };
 
   return (
     <StyledProduct>
@@ -18,8 +22,28 @@ function Product({ product }) {
         <img alt="product" src={`./images/${thumbnail}`} />
       </figure>
       <div>
-        <p>{name}</p>
-        <p>{`R$ ${price.toFixed(2)}`}</p>
+        <div>
+          <p>{name}</p>
+          <p>{`R$ ${price.toFixed(2)}`}</p>
+          {quantity}
+        </div>
+        <div>
+          {
+            quantity === 0 ?
+              <button
+                type="button"
+                onClick={() => setQuantity((prevState) => prevState + 1)}
+              >
+
+                <ion-icon name="add-circle"></ion-icon>
+              </button> :
+              <div>
+                <p onClick={(prevState) => prevState - 1}>-</p>
+                <p>{quantity}</p>
+                <p onClick={(prevState) => prevState + 1}>+</p>
+              </div>
+          }
+        </div>
       </div>
     </StyledProduct>
   )
@@ -37,6 +61,10 @@ const StyledProduct = styled.div`
   padding: 18px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 
+  button:hover {
+    background-color: red;
+  }
+
   figure {
     /* background-color: purple; */
     width: 100%;
@@ -53,7 +81,19 @@ const StyledProduct = styled.div`
     /* background-color: purple; */
     height: 30%;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+      font-size: 22px;
+      color: green;
+      padding: 15px;
+      border: none;
+      background-color: transparent;
+    }
+
+    & > button:nth-of-type(2) {
+      background-color: yellow;
+    }
   }
 `;
