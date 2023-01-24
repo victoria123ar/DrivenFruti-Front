@@ -102,7 +102,7 @@ const StyledHeader = styled.header`
     left: 50%;
     transform: translate(-50%);
     top: 50px;
-    width: 96%;
+    width: 90%;
   }
 
   & > div:nth-of-type(2) {
