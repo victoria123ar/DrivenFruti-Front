@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Product from "../components/Product";
+import Logo from "../images/logos/logo.png";
 
 function Home() {
   const [search, setSearch] = useState('');
@@ -33,7 +34,7 @@ function Home() {
       <StyledHeader>
         <div>
           <figure>
-            <img alt="logo" src="" />
+            <img alt="logo" src={Logo} />
           </figure>
           <div>
             <ion-icon name="cart-outline"></ion-icon>
@@ -90,6 +91,10 @@ const StyledHeader = styled.header`
     * {
       margin: 8px;
     }
+    }
+    img{
+      margin-left: 20px;
+      width: 150px;
     }
   }
 
