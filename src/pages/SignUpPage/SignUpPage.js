@@ -28,36 +28,36 @@ export default function SignUpPage(){
                             name="name"
                         />
 
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            name="email"
-                        />
+            <input
+              type="email"
+              placeholder="Email"
+              name="email"
+            />
 
-                        <input
-                            type="password"
-                            placeholder="Senha"
-                            name="password"
-                        />
+            <input
+              type="password"
+              placeholder="Senha"
+              name="password"
+            />
 
-                        <input
-                            type="password"
-                            placeholder="Confirme sua senha"
-                            name="ConfirmPassword"
-                        />
+            <input
+              type="password"
+              placeholder="Confirme sua senha"
+              name="ConfirmPassword"
+            />
 
-                        <button>
-                            <ion-icon name="log-in-outline"></ion-icon>
-                            <p>Cadastrar</p>
-                        </button>
-                    </form>
+            <button>
+              <ion-icon name="log-in-outline"></ion-icon>
+              <p>Cadastrar</p>
+            </button>
+          </form>
 
-                    <button>
-                        <ion-icon name="person-outline"></ion-icon>
-                        <p>Já tenho uma conta!</p>
-                    </button>
-                </ContainerInputs>
-            </Container>
-        </SignUpLayout>
-    )
+          <button>
+            <ion-icon name="person-outline"></ion-icon>
+            <p>Já tenho uma conta!</p>
+          </button>
+        </ContainerInputs>
+      </Container>
+    </SignUpLayout>
+  )
 }

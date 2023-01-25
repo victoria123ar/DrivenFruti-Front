@@ -12,7 +12,7 @@ export default function Login() {
         <InputLogin />
         <Cadastro>
           <IoPersonAddOutline />
-          <Link to="/sign-up" style={{ textDecoration: "none", color: "#49ad0d"}}>
+          <Link to="/sign-up" style={{ textDecoration: "none", color: "#49ad0d" }}>
             <p>Faça seu cadastro!</p>
           </Link>
         </Cadastro>
@@ -65,7 +65,7 @@ const Cadastro = styled.button`
   background-color: #ffffff;
   border: none;
   cursor: pointer;
-
+  
   display: flex;
   justify-content: center;
   align-items: center;
