@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
+import Context from "../context/Context";
 
 function Product({ product }) {
   const {
@@ -10,11 +11,20 @@ function Product({ product }) {
     productId,
   } = product;
 
+  const { userInfos, setUserInfos } = useContext(Context);
   const [quantity, setQuantity] = useState(0);
 
-  function addToCart() {
+  useEffect(() => {
+    const userCartIds = userInfos.cartIds;
+    const quantityIds = userCartIds.filter((id) => id === productId).length;
 
-  };
+    if (userInfos.cartIds.includes(productId)) {
+      setQuantity(quantityIds);
+      console.log(userInfos);
+    }
+
+
+  }, [userInfos.cartIds.length]);
 
   return (
     <StyledProduct>
@@ -23,24 +33,51 @@ function Product({ product }) {
       </figure>
       <div>
         <div>
-          <p>{name}</p>
           <p>{`R$ ${price.toFixed(2)}`}</p>
-          {quantity}
+          <p>{name}</p>
         </div>
         <div>
           {
-            quantity === 0 ?
+            userInfos.cartIds.filter((id) => id === productId).length === 0 ?
               <button
                 type="button"
-                onClick={() => setQuantity((prevState) => prevState + 1)}
+                onClick={() => {
+                  setUserInfos((prevState) => ({
+                    ...prevState,
+                    cartIds: [...prevState.cartIds, productId],
+                  }));
+                }}
               >
-
                 <ion-icon name="add-circle"></ion-icon>
               </button> :
               <div>
-                <p onClick={(prevState) => prevState - 1}>-</p>
-                <p>{quantity}</p>
-                <p onClick={(prevState) => prevState + 1}>+</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUserInfos((prevState) => {
+                      const ids = prevState.cartIds.filter((id) => id === productId);
+
+                      return ({
+                        ...prevState,
+                        cartIds: ids.slice(1),
+                      });
+                    })
+                  }}
+                >
+                  <ion-icon name="remove-circle-outline"></ion-icon>
+                </button>
+                <p>{userInfos.cartIds.filter((id) => id === productId).length}</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUserInfos((prevState) => ({
+                      ...prevState,
+                      cartIds: [...prevState.cartIds, productId],
+                    }));
+                  }}
+                >
+                  <ion-icon name="add-circle-outline"></ion-icon>
+                </button>
               </div>
           }
         </div>
@@ -62,11 +99,10 @@ const StyledProduct = styled.div`
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
 
   button:hover {
-    background-color: red;
+    /* background-color: red; */
   }
 
   figure {
-    /* background-color: purple; */
     width: 100%;
     height: 70%;
   }
@@ -78,22 +114,61 @@ const StyledProduct = styled.div`
   }
 
   & > div {
-    /* background-color: purple; */
     height: 30%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
-    button {
-      font-size: 22px;
+    p:first-of-type {
+      font-size: 24px;
       color: green;
-      padding: 15px;
-      border: none;
-      background-color: transparent;
+      font-weight: 600;
+      margin-bottom: 8px;
     }
 
-    & > button:nth-of-type(2) {
-      background-color: yellow;
+    p:nth-of-type(2) {
+      color: rgba(0, 0, 0, 0.5);
+    }
+
+    & > div:nth-of-type(2) {
+      /* background-color: yellow; */
+      position: relative;
+
+
+      & > button {
+        font-size: 22px;
+        color: green;
+        padding: 15px;
+        border: none;
+        background-color: transparent;
+      }
+
+      & > div {
+        background-color: rgb(240, 240, 240);
+        display: flex;
+        padding: 3px;
+        border: 1px solid rgba(0, 0, 0, 0.4);
+        border-radius: 15px;
+        position: absolute;
+        right: -10px;
+        bottom: -40px;
+
+        * {
+          margin: 2px;
+          background-color: transparent;
+          border: none;
+          font-size: 22px;
+        }
+
+        p {
+          border: 1px solid green;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 9px;
+          padding: 10px;
+        }
+      }
     }
   }
 `;
