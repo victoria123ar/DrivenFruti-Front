@@ -4,18 +4,19 @@ import styled from "styled-components";
 import Product from "../components/Product";
 import Logo from "../images/logos/logo.png";
 import Context from "../context/Context";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [filter, setFilter] = useState([]);
-  const [products, setProducts] = useState([]);
   const [category, setCategory] = useState('all');
-  const [total, setTotal] = useState(0);
 
-  const { userInfos } = useContext(Context);
+  const { userInfos, setGlobalProducts, globalProducts, total, setTotal } = useContext(Context);
+
+  const navigate = useNavigate();
 
   function calculateTotal() {
     const cartProducts = userInfos.cartIds
-      .map((id) => products.find(({ productId }) => productId === id));
+      .map((id) => globalProducts.find(({ productId }) => productId === id));
 
     const total = cartProducts.reduce((acc, curr) => acc + curr.price, 0);
 
@@ -24,7 +25,7 @@ function Home() {
 
   function handleSearch(target) {
     const { value } = target;
-    const productsFiltered = products
+    const productsFiltered = globalProducts
       .filter(({ name }) => name.toLowerCase().includes(value.toLowerCase()));
 
     setFilter(productsFiltered);
@@ -39,7 +40,7 @@ function Home() {
       return;
     };
 
-    const productsFiltered = products
+    const productsFiltered = globalProducts
       .filter(({ category }) => category === name);
 
     console.log(name, productsFiltered)
@@ -69,7 +70,7 @@ function Home() {
 
       console.log(data)
 
-      setProducts(data);
+      setGlobalProducts(data);
     }
     fetcher();
 
@@ -91,9 +92,14 @@ function Home() {
               {userInfos.cartIds.length > 0 && userInfos.cartIds.length}
             </StyledCartQuantity>
             <StyledCartTotal quantity={userInfos.cartIds.length}>
-              {`R$ ${total}`}
+              {`R$ ${String(Number(total).toFixed(2)).replace('.', ',')}`}
             </StyledCartTotal>
-            <ion-icon name="cart-outline"></ion-icon>
+            <button
+              type="button"
+              onClick={() => navigate('/cart')}
+            >
+              <ion-icon name="cart-outline"></ion-icon>
+            </button>
             <ion-icon name="log-in-outline"></ion-icon>
           </div>
         </div>
@@ -168,7 +174,7 @@ function Home() {
         <div>
           {
             (filter.length === 0
-              ? products :
+              ? globalProducts :
               filter).map((product, index) => <Product key={index} product={product} />)
           }
         </div>
@@ -185,7 +191,7 @@ const StyledCartQuantity = styled.p`
   padding: 4px;
   border-radius: 10px 0 10px 0;
   z-index: 1;
-  transform: translate(100%, 50%);
+  transform: translate(calc(100% + 8px), 100%);
   display: ${({ quantity }) => quantity > 0 ? 'block' : 'none'};
 `;
 
@@ -199,7 +205,7 @@ const StyledCartTotal = styled.p`
   white-space: pre;
   border-radius: 10px 0 10px 0;
   z-index: 1;
-  transform: translate(-100%, 0);
+  transform: translate(calc(-100% + 10px), 10px);
   display: ${({ quantity }) => quantity > 0 ? 'block' : 'none'};
 `;
 
@@ -225,6 +231,15 @@ const StyledHeader = styled.header`
 
     * {
       margin: 8px;
+    }
+
+    button {
+      background-color: transparent;
+      border: none;
+      font-size: 25px;
+    }
+    button:hover {
+      background-color: green;
     }
     }
     img{

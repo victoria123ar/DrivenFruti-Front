@@ -20,7 +20,7 @@ function Product({ product }) {
       </figure>
       <div>
         <div>
-          <p>{`R$ ${price.toFixed(2)}`}</p>
+          <p>{`R$ ${String(Number(price).toFixed(2)).replace('.', ',')}`}</p>
           <p>{name}</p>
         </div>
         <div>
@@ -69,7 +69,7 @@ function Product({ product }) {
           }
         </div>
       </div>
-    </StyledProduct>
+    </StyledProduct >
   )
 };
 
