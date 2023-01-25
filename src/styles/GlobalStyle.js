@@ -49,6 +49,16 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+*{
+	box-sizing: border-box;
+}
+
+form{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
 `
 
 export default GlobalStyle;

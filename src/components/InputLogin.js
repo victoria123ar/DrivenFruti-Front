@@ -19,6 +19,7 @@ const Form = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
   @media (max-width: 800px) {
     width: 100%;
   }
@@ -33,9 +34,11 @@ const Form = styled.form`
     color: #49ad0d;
     font-size: 22px;
     margin-bottom: 14px;
+
     @media (max-width: 1315px) {
       width: 80%;
     }
+
     @media (max-width: 800px) {
       height: 45px;
     }
@@ -59,12 +62,15 @@ const Button = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+
   p{
     margin-left: 10px;
   }
+
   @media (max-width: 1315px) {
     width: 80%;
   }
+
   @media (max-width: 800px) {
     height: 45px;
   }

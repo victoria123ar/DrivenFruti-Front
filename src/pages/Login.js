@@ -40,14 +40,17 @@ const Page = styled.div`
   background-color: #ffffff;
   border-radius: 30px;
   padding: 10px;
+
   @media (max-width: 800px) {
     width: 100%;
     height: 100%;
     border-radius: 0px;
   }
+
   img {
     margin-bottom: 15px;
     width: 75%;
+
     @media (max-width: 800px) {
       width: 85%;
     }
@@ -62,11 +65,13 @@ const Cadastro = styled.button`
   background-color: #ffffff;
   border: none;
   cursor: pointer;
+  
   display: flex;
   justify-content: center;
   align-items: center;
   color: #49ad0d;
   font-size: 20px;
+
   p{
     margin-left: 10px;
   }
@@ -74,6 +79,7 @@ const Cadastro = styled.button`
   :hover{
     background-color: #ECF6E6;
   }
+
   @media (max-width: 800px) {
     height: 45px;
   }
