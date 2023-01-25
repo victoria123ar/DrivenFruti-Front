@@ -9,8 +9,18 @@ function Home() {
   const [filter, setFilter] = useState([]);
   const [products, setProducts] = useState([]);
   const [category, setCategory] = useState('all');
+  const [total, setTotal] = useState(0);
 
   const { userInfos } = useContext(Context);
+
+  function calculateTotal() {
+    const cartProducts = userInfos.cartIds
+      .map((id) => products.find(({ productId }) => productId === id));
+
+    const total = cartProducts.reduce((acc, curr) => acc + curr.price, 0);
+
+    setTotal(total.toFixed(2));
+  };
 
   function handleSearch(target) {
     const { value } = target;
@@ -37,6 +47,12 @@ function Home() {
     setCategory(name);
     setFilter(productsFiltered);
   };
+
+  useEffect(() => {
+    calculateTotal();
+  }, [userInfos.cartIds.length]);
+
+  console.log(total);
 
   useEffect(() => {
     const URL = 'http://localhost:5000';
@@ -74,6 +90,9 @@ function Home() {
             <StyledCartQuantity quantity={userInfos.cartIds.length}>
               {userInfos.cartIds.length > 0 && userInfos.cartIds.length}
             </StyledCartQuantity>
+            <StyledCartTotal quantity={userInfos.cartIds.length}>
+              {`R$ ${total}`}
+            </StyledCartTotal>
             <ion-icon name="cart-outline"></ion-icon>
             <ion-icon name="log-in-outline"></ion-icon>
           </div>
@@ -170,6 +189,20 @@ const StyledCartQuantity = styled.p`
   display: ${({ quantity }) => quantity > 0 ? 'block' : 'none'};
 `;
 
+const StyledCartTotal = styled.p`
+  position: absolute;
+  font-size: 18px;
+  background-color: rgb(0, 0, 0, 0.2);
+  font-weight: 600;
+  color: green;
+  padding: 5px;
+  white-space: pre;
+  border-radius: 10px 0 10px 0;
+  z-index: 1;
+  transform: translate(-100%, 0);
+  display: ${({ quantity }) => quantity > 0 ? 'block' : 'none'};
+`;
+
 const StyledHeader = styled.header`
   background-color: rgba(255, 255, 255, 0.8);
   position: relative;
@@ -209,7 +242,7 @@ const StyledHeader = styled.header`
     position: absolute;
     left: 50%;
     transform: translate(-50%);
-    top: 50px;
+    top: 70px;
     width: 90%;
   }
 `;

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import Context from "../context/Context";
 
@@ -12,19 +12,6 @@ function Product({ product }) {
   } = product;
 
   const { userInfos, setUserInfos } = useContext(Context);
-  const [quantity, setQuantity] = useState(0);
-
-  useEffect(() => {
-    const userCartIds = userInfos.cartIds;
-    const quantityIds = userCartIds.filter((id) => id === productId).length;
-
-    if (userInfos.cartIds.includes(productId)) {
-      setQuantity(quantityIds);
-      console.log(userInfos);
-    }
-
-
-  }, [userInfos.cartIds.length]);
 
   return (
     <StyledProduct>
@@ -92,8 +79,8 @@ const StyledProduct = styled.div`
   /* background-color: red; */
   border: 1px solid rgba(0, 0, 0, 0.2 );
   border-radius: 12px;
-  width: 170px;
-  height: 170px;
+  width: 200px;
+  height: 200px;
   margin: 15px;
   padding: 18px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
@@ -120,6 +107,7 @@ const StyledProduct = styled.div`
     align-items: center;
 
     p:first-of-type {
+      background-color: ;
       font-size: 24px;
       color: green;
       font-weight: 600;
