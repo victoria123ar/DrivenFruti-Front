@@ -1,14 +1,27 @@
-import { ContainerInputs, SignUpLayout, Container} from "./styled";
+import { useState } from "react";
+import { ContainerInputs, SignUpLayout, Container, Message} from "./styled";
 import logo from "../../assets/logos/bigLogoSticker.png"
+import pet from "../../assets/logos/petSticker.png"
 
 export default function SignUpPage(){
+    const [hidden, setHidden] = useState("1000px");
+
+    function handleSubmit(e){
+        e.preventDefault()
+        setHidden("0px")
+    }
+
     return(
         <SignUpLayout>
             <Container>
-                <img src={logo}/>
+                <Message left={hidden}>
+                    <img src={pet}/>
+                    <p>Cadastro concluido!</p>
+                </Message>
+                <img src={logo} />
                 
                 <ContainerInputs>
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <input
                             type="text"
                             placeholder="Nome"
