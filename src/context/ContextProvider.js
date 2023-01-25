@@ -1,13 +1,16 @@
 import React, { useMemo } from 'react';
 import Context from './Context';
-import ContextUserInfos from './ContextUserInfos';
+import ContextProducts from './ContextProducts';
+import ContextUser from './ContextUser';
 
 function ContextProvider({ children }) {
-  const data = ContextUserInfos();
+  const dataProducts = ContextProducts();
+  const userInfos = ContextUser();
 
   const context = useMemo(() => ({
-    ...data,
-  }), [data]);
+    ...dataProducts,
+    ...userInfos,
+  }), [dataProducts, userInfos]);
 
   return (
     <Context.Provider value={context}>

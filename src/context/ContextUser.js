@@ -1,20 +1,24 @@
 import { useState } from 'react';
 
-function ContextUserInfos() {
+function ContextUser() {
   const initialUserInfos = {
+    name: '',
     password: '',
     email: '',
-    name: '',
     cartIds: [],
   };
-  const [userInfos, setUserInfos] = useState(initialUserInfos);
 
-  const contextUserInfosObject = {
+  const [userInfos, setUserInfos] = useState(initialUserInfos);
+  const [total, setTotal] = useState(0);
+
+  const contextUserObject = {
     userInfos,
     setUserInfos,
+    total,
+    setTotal,
   };
 
-  return contextUserInfosObject;
+  return contextUserObject;
 }
 
-export default ContextUserInfos;
+export default ContextUser;
