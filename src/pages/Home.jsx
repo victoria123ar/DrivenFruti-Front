@@ -53,7 +53,7 @@ function Home() {
     calculateTotal();
   }, [userInfos.cartIds.length]);
 
-  console.log(total);
+  // console.log(total);
 
   useEffect(() => {
     const URL = 'http://localhost:5000';
@@ -68,7 +68,7 @@ function Home() {
 
       data.forEach((product) => product.quantity = 0);
 
-      console.log(data)
+      // console.log(data)
 
       setGlobalProducts(data);
     }

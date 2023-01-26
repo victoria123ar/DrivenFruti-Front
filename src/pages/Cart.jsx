@@ -4,14 +4,20 @@ import CartItem from "../components/CartItem";
 import Context from "../context/Context";
 
 function Cart() {
-  const { userInfos, setGlobalProducts, globalProducts, total } = useContext(Context);
+  const { userInfos, globalProducts, total, setTotal } = useContext(Context);
   const [groups, setGroups] = useState([]);
 
-  console.log(userInfos);
+  function calculateTotal() {
+    const cartProducts = userInfos.cartIds
+      .map((id) => globalProducts.find(({ productId }) => productId === id));
+
+    const total = cartProducts.reduce((acc, curr) => acc + curr.price, 0);
+
+    setTotal(total.toFixed(2));
+  };
 
   function groupItems() {
     const { cartIds } = userInfos;
-
     const groups = {};
 
     cartIds.forEach((id) => {
@@ -25,9 +31,8 @@ function Cart() {
     setGroups(groups);
   };
 
-  useEffect(() => {
-    groupItems();
-  }, []);
+  useEffect(() => groupItems(), []);
+  useEffect(() => calculateTotal(), [userInfos.cartIds.length]);
 
   return (
     <StyledCart>
@@ -39,6 +44,19 @@ function Cart() {
         <ul>
           {Object.entries(groups).map((entry) => <CartItem entry={entry} />)}
         </ul>
+        <div>
+          <button
+            type="button"
+          >
+            Adicionar mais itens ao carrinho
+          </button>
+          <button
+            type="button"
+          >
+            <ion-icon name="trash-outline"></ion-icon>
+            Limpar carrinho
+          </button>
+        </div>
       </StyledMain>
       <StyledFooter>
         <div>
@@ -61,8 +79,39 @@ const StyledCart = styled.div`
 
 const StyledMain = styled.main`
   position: absolute;
-  top: 70px;
+  top: 50px;
   padding: 30px;
+  height: min-content;
+  max-height: calc(100vh - 190px);
+  overflow-y: scroll;
+
+  & > div:first-of-type {
+    /* background-color: red; */
+    padding: 30px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & button {
+      margin: 10px;
+      background-color: transparent;
+      border: none;
+      font-weight: 600;
+
+      &:first-of-type {
+        color: green;
+
+        & ~ button {
+          color: red;
+          display: flex;
+          align-items: center;
+          * {
+            margin: 8px;
+          }
+        }
+      }
+    }
+  }
 `;
 
 const StyledHeader = styled.header`
@@ -71,6 +120,7 @@ const StyledHeader = styled.header`
   justify-content: space-between;
   position: fixed;
   width: 100%;
+  min-height: 50px;
   padding: 15px;
   background-color: rgba(240, 240, 240, 0.8);
   z-index: 1;
@@ -86,6 +136,7 @@ const StyledFooter = styled.footer`
   width: 100%;
   padding: 15px;
   z-index: 1;
+  min-height: 140px;
 
   & div {
     width: 70%;
