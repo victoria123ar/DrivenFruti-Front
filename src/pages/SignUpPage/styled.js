@@ -9,35 +9,6 @@ export const SignUpLayout = styled.div`
     background-color: #C5FF98;
     font-family: 'Roboto', sans-serif;
 `
-export const Message = styled.aside`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 70px;
-    background-color: #49AD0D;
-    position: absolute;
-    opacity: 0.9;
-    top: 0;
-    right: 0;
-    left: ${props => props.left};
-    transition: all 500ms ease-in-out;
-    gap: 20px;
-
-        @media (min-width: 800px){
-            height: 100px;
-        }
-
-        img{
-            height: 90px !important;
-            width: auto !important;
-        }
-
-        p{
-            font-size: 25px;
-            color: #FFFFFF;
-            font-weight: 800;
-        }
-`
 
 export const Container = styled.div`
     display: flex;
@@ -103,10 +74,15 @@ export const ContainerInputs = styled.div`
             justify-content: center;
             align-items: center;
             color: #FFFFFF;
-            font-size: 25px;
+            font-size: 22px;
+            font-weight: 700;
 
             p{
                 font-size: 20px;
+            }
+
+            &:hover{
+                filter: opacity(80%);
             }
 
             @media (max-width: 800px){
@@ -121,8 +97,8 @@ export const ContainerInputs = styled.div`
         border-radius: 8px;
         background: #FFFFFF;
         padding: 18px;
-        border: 1px solid #C5FF98;
-        color: rgba(80,103,91);
+        border: 1px solid #49AD0D;
+        color: #fb5754;
         font-size: 22px;
         cursor: text;
 
@@ -131,7 +107,7 @@ export const ContainerInputs = styled.div`
         }
 
         &::placeholder{
-            color: gray;
+            color: #49AD0D;
         }
 
         @media (max-width: 800px){
@@ -154,7 +130,11 @@ export const ContainerInputs = styled.div`
         justify-content: center;
         align-items: center;
         color: #FB5754;
-        font-size: 20px;
+        font-size: 30px;
+
+            p{
+                font-size: 20px;
+            }
 
         @media (max-width: 800px){
             height: 45px;
