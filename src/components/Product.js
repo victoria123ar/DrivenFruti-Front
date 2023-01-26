@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import styled from "styled-components";
 import Context from "../context/Context";
+import CartItemsHandler from "./CartItemsHandler";
 
 function Product({ product }) {
   const {
@@ -37,35 +38,7 @@ function Product({ product }) {
               >
                 <ion-icon name="add-circle"></ion-icon>
               </button> :
-              <div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setUserInfos((prevState) => {
-                      const ids = prevState.cartIds.filter((id) => id === productId);
-
-                      return ({
-                        ...prevState,
-                        cartIds: ids.slice(1),
-                      });
-                    })
-                  }}
-                >
-                  <ion-icon name="remove-circle-outline"></ion-icon>
-                </button>
-                <p>{userInfos.cartIds.filter((id) => id === productId).length}</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setUserInfos((prevState) => ({
-                      ...prevState,
-                      cartIds: [...prevState.cartIds, productId],
-                    }));
-                  }}
-                >
-                  <ion-icon name="add-circle-outline"></ion-icon>
-                </button>
-              </div>
+              <CartItemsHandler productId={productId} />
           }
         </div>
       </div>

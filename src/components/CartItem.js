@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Context from "../context/Context";
+import CartItemsHandler from "./CartItemsHandler";
 
 function CartItem({ entry }) {
   const { globalProducts, userInfos } = useContext(Context);
   const [item, setItem] = useState(null);
   const [quantity, setQuantity] = useState(0);
+  const [itemId, quantityEntry] = entry;
 
   useEffect(() => {
-    const [itemId, quantityEntry] = entry;
     const product = globalProducts.find(({ productId }) => productId === itemId);
 
     console.log(product, itemId, globalProducts)
@@ -32,19 +33,7 @@ function CartItem({ entry }) {
             {`R$ ${String(Number(item?.price * quantity).toFixed(2)).replace('.', ',')}`}
           </h3>
           <div>
-            <div>
-              <button
-                type="button"
-              >
-                <ion-icon name="remove-circle-outline"></ion-icon>
-              </button>
-              <p>{quantity}</p>
-              <button
-                type="button"
-              >
-                <ion-icon name="add-circle-outline"></ion-icon>
-              </button>
-            </div>
+            <CartItemsHandler productId={itemId} />
             <ion-icon name="trash-outline"></ion-icon>
           </div>
         </div>

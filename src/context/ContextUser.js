@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import Context from './Context';
 
 function ContextUser() {
   const initialUserInfos = {
