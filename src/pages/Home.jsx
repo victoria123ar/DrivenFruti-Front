@@ -100,7 +100,12 @@ function Home() {
             >
               <ion-icon name="cart-outline"></ion-icon>
             </button>
-            <ion-icon name="log-in-outline"></ion-icon>
+            <button
+              type="button"
+              onClick={() => navigate('/sign-in')}
+            >
+              <ion-icon name="log-in-outline"></ion-icon>
+            </button>
           </div>
         </div>
         <input
@@ -230,7 +235,7 @@ const StyledHeader = styled.header`
     font-size: 25px;
 
     * {
-      margin: 8px;
+      margin: 4px;
     }
 
     button {
