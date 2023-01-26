@@ -4,8 +4,6 @@ import Context from "../context/Context";
 function CartItemsHandler({ productId }) {
   const { userInfos, setUserInfos } = useContext(Context);
 
-  // console.log(userInfos);
-
   return (
     <div>
       <button

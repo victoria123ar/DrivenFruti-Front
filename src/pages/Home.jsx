@@ -43,8 +43,6 @@ function Home() {
     const productsFiltered = globalProducts
       .filter(({ category }) => category === name);
 
-    console.log(name, productsFiltered)
-
     setCategory(name);
     setFilter(productsFiltered);
   };
@@ -52,8 +50,6 @@ function Home() {
   useEffect(() => {
     calculateTotal();
   }, [userInfos.cartIds.length]);
-
-  // console.log(total);
 
   useEffect(() => {
     const URL = 'http://localhost:5000';
@@ -67,8 +63,6 @@ function Home() {
       data.sort(() => .5 - Math.random()); // shuffle array
 
       data.forEach((product) => product.quantity = 0);
-
-      // console.log(data)
 
       setGlobalProducts(data);
     }
@@ -234,14 +228,12 @@ const StyledHeader = styled.header`
   z-index: 2;
   
   & > div:first-of-type {
-    /* background-color: green; */
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
 
     & > div {
-    /* background-color: red; */
     font-size: 25px;
 
     * {
@@ -264,7 +256,6 @@ const StyledHeader = styled.header`
   }
 
   input {
-    /* background-color: red; */
     padding: 7px;
     border: 1px solid red;
     border-left-width: 4px;
@@ -286,7 +277,6 @@ const StyledCategory = styled.button`
 `;
 
 const StyledMain = styled.main`
-  /* background-color: green; */
   position: relative;
   top: 100px;
 
@@ -311,7 +301,6 @@ const StyledMain = styled.main`
       list-style-type: none;
       padding: 7px;
       overflow-x: scroll;
-      /* scrollbar-width: none; */
 
       &::-webkit-scrollbar {
         display: none;
