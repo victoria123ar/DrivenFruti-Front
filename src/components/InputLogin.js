@@ -1,12 +1,55 @@
 import styled from "styled-components";
 import { CiLogin } from "react-icons/ci";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function InputLogin() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [disabled, setDisabled] = useState(false);
+
+  function login(e) {
+    e.preventDefault();
+    setDisabled(true);
+
+    const postData = {
+      email: email,
+      password: password,
+    };
+
+    axios
+      .post(`${process.env.REACT_APP_API_URL}/sign-in`, postData)
+      .then((resposta) => {
+        console.log(resposta);
+        navigate("/");
+      })
+      .catch((erro) => {
+        alert(erro.response.data.message);
+        setDisabled(false);
+      });
+  }
+
   return (
-    <Form>
-      <input placeholder="E-mail" type="email" />
-      <input placeholder="Senha" type="password" />
-      <Button>
+    <Form onSubmit={(e) => login(e)}>
+      <input
+        placeholder="E-mail"
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        disabled={!disabled ? false : true}
+      />
+      <input
+        placeholder="Senha"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        disabled={!disabled ? false : true}
+      />
+      <Button disabled={!disabled ? false : true}>
         <CiLogin />
         <p>Entrar</p>
       </Button>
@@ -63,7 +106,7 @@ const Button = styled.button`
   align-items: center;
   justify-content: center;
 
-  p{
+  p {
     margin-left: 10px;
   }
 
