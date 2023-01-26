@@ -59,6 +59,10 @@ form{
 	flex-direction: column;
 	align-items: center;
 }
+
+a{
+	text-decoration: none;
+}
 `
 
 export default GlobalStyle;

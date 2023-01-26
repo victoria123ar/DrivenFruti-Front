@@ -1,130 +1,156 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import Product from "../components/Product";
 import Logo from "../images/logos/logo.png";
+import Context from "../context/Context";
+import Header from "../components/Header";
 
 function Home() {
-  const [search, setSearch] = useState('');
-  const [products, setProducts] = useState([]);
+  const [filter, setFilter] = useState([]);
+  const [category, setCategory] = useState('all');
+
+  const { userInfos, setGlobalProducts, globalProducts, total, setTotal } = useContext(Context);
+
+  function calculateTotal() {
+    const cartProducts = userInfos.cartIds
+      .map((id) => globalProducts.find(({ productId }) => productId === id));
+
+    const total = cartProducts.reduce((acc, curr) => acc + curr.price, 0);
+
+    setTotal(total.toFixed(2));
+  };
 
   function handleSearch(target) {
     const { value } = target;
-    setSearch(value);
+    const productsFiltered = globalProducts
+      .filter(({ name }) => name.toLowerCase().includes(value.toLowerCase()));
+
+    setFilter(productsFiltered);
+  };
+
+  function selectByCategory(target) {
+    const { name } = target;
+
+    if (name === 'all') {
+      setCategory('all');
+      setFilter([]);
+      return;
+    };
+
+    const productsFiltered = globalProducts
+      .filter(({ category }) => category === name);
+
+    setCategory(name);
+    setFilter(productsFiltered);
   };
 
   useEffect(() => {
+    calculateTotal();
+  }, [userInfos.cartIds.length]);
+
+  useEffect(() => {
     const URL = 'http://localhost:5000';
+    const controller = new AbortController();
+    const signal = controller.signal;
 
     const fetcher = async () => {
-      const productsData = await axios.post(URL, {});
+      const productsData = await axios.post(URL, {}, { signal });
       const { data } = productsData;
 
-      setProducts(data);
+      data.sort(() => .5 - Math.random()); // shuffle array
+
+      data.forEach((product) => product.quantity = 0);
+
+      setGlobalProducts(data);
     }
     fetcher();
 
     return () => {
-      console.log('Cleaning...')
+      console.log('Cleaning...');
+      controller.abort();
     };
   }, []);
 
+  const categories = [
+    ['all', 'Todos'],
+    ['fruits', 'Frutas'],
+    ['greens', 'Verduras'],
+    ['vegetables', 'Legumes'],
+    ['bakery', 'Padaria'],
+    ['organics', 'Orgânicos'],
+    ['drinks', 'Bebidas'],
+  ];
+
   return (
     <div>
-      <StyledHeader>
-        <div>
-          <figure>
-            <img alt="logo" src={Logo} />
-          </figure>
-          <div>
-            <ion-icon name="cart-outline"></ion-icon>
-            <ion-icon name="log-in-outline"></ion-icon>
-          </div>
-        </div>
-        <input
-          type="text"
-          value={search}
-          onChange={({ target }) => handleSearch(target)}
-          placeholder="Qual produto você procura?"
-        >
-        </input>
-        <div />
-      </StyledHeader>
+      <Header
+        Logo={Logo}
+        handleSearch={handleSearch}
+        userInfos={userInfos}
+        total={total}
+      />
       <StyledMain>
         <div>
           <ul>
-            <li>Frutas</li>
-            <li>Verduras</li>
-            <li>Legumes</li>
-            <li>Padaria</li>
-            <li>Orgânicos</li>
-            <li>Bebidas</li>
+            {categories.map((categoryType) =>
+              <StyledCategory
+                type="button"
+                name={categoryType[0]}
+                category={category}
+                onClick={({ target }) => selectByCategory(target)}
+              >
+                {categoryType[1]}
+              </StyledCategory>
+            )}
           </ul>
         </div>
         <div>
-          {products.map((product, index) => <Product key={index} product={product} />)}
+          {
+            (filter.length === 0
+              ? globalProducts :
+              filter).map((product, index) => <Product key={index} product={product} />)
+          }
         </div>
+        <button
+          type="button"
+          onClick={() => {
+            const link = encodeURIComponent(`Olá, faça seu pedido.`);
+
+            window.location.href = "https://wa.me/+5521995784778?text=" + link;
+          }}
+        >
+          <ion-icon name="logo-whatsapp"></ion-icon>
+        </button>
       </StyledMain>
     </div>
   );
 };
 
-const StyledHeader = styled.header`
-  /* background-color: #f9f9f9; */
-  position: relative;
-  position: fixed;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  
-  & > div:first-of-type {
-    /* background-color: green; */
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-
-    & > div {
-    /* background-color: red; */
-    font-size: 25px;
-
-    * {
-      margin: 8px;
-    }
-    }
-    img{
-      margin-left: 20px;
-      width: 150px;
-    }
-  }
-
-  input {
-    /* background-color: red; */
-    padding: 7px;
-    border: 1px solid red;
-    border-left-width: 4px;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 50px;
-    width: 90%;
-  }
-
-  & > div:nth-of-type(2) {
-    min-width: 100%;
-    min-height: 100px;
-    position: absolute;
-    filter: blur(2px);
-    background-color: rgba(255, 255, 255, 0.8);
-    z-index: -2;
-  }
+const StyledCategory = styled.button`
+  margin: 8px;
+  background-color: transparent;
+  border: none;
+  font-weight: 600;
+  border-bottom: ${(({ name, category }) => (name === category) ? '1px solid red' : 'none')};
 `;
 
 const StyledMain = styled.main`
-  /* background-color: green; */
   position: relative;
   top: 100px;
-  z-index: -3;
+
+  & > button {
+    position: fixed;
+    bottom: 50px;
+    right: 0;
+    font-size: 25px;
+    color: white;
+    background-color: green;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+  } 
 
   & > div:first-of-type {
     ul {
@@ -133,9 +159,10 @@ const StyledMain = styled.main`
       justify-content: space-between;
       list-style-type: none;
       padding: 7px;
+      overflow-x: scroll;
 
-      li {
-        margin: 8px;
+      &::-webkit-scrollbar {
+        display: none;
       }
     }
   }
