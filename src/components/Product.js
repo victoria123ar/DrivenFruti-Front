@@ -8,7 +8,6 @@ function Product({ product }) {
     name,
     price,
     thumbnail,
-    category,
     productId,
   } = product;
 
@@ -49,7 +48,6 @@ function Product({ product }) {
 export default Product;
 
 const StyledProduct = styled.div`
-  /* background-color: red; */
   border: 1px solid rgba(0, 0, 0, 0.2 );
   border-radius: 12px;
   width: 200px;
@@ -57,10 +55,6 @@ const StyledProduct = styled.div`
   margin: 15px;
   padding: 18px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-
-  button:hover {
-    /* background-color: red; */
-  }
 
   figure {
     width: 100%;
@@ -70,7 +64,6 @@ const StyledProduct = styled.div`
   img {
     width: 100%;
     height: 100%;
-    /* background-color: yellow; */
   }
 
   & > div {
@@ -80,7 +73,6 @@ const StyledProduct = styled.div`
     align-items: center;
 
     p:first-of-type {
-      background-color: ;
       font-size: 24px;
       color: green;
       font-weight: 600;
@@ -92,9 +84,7 @@ const StyledProduct = styled.div`
     }
 
     & > div:nth-of-type(2) {
-      /* background-color: yellow; */
       position: relative;
-
 
       & > button {
         font-size: 22px;

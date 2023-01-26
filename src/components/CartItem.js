@@ -4,7 +4,7 @@ import Context from "../context/Context";
 import CartItemsHandler from "./CartItemsHandler";
 
 function CartItem({ entry }) {
-  const { globalProducts, userInfos } = useContext(Context);
+  const { globalProducts } = useContext(Context);
   const [item, setItem] = useState(null);
   const [quantity, setQuantity] = useState(0);
   const [itemId, quantityEntry] = entry;
@@ -17,9 +17,6 @@ function CartItem({ entry }) {
     setQuantity(quantityEntry);
     setItem(product);
   }, []);
-
-  // console.log(userInfos.cartIds);
-  console.log(item?.thumbnail)
 
   return (
     <CartItemStyled>
@@ -57,18 +54,12 @@ const CartItemStyled = styled.div`
   }
 
   & > div {
-    /* background-color: red; */
     width: 85%;
     display: flex;
     flex-direction: column;
     padding: 5px 15px 5px 15px;
 
-    & > p:first-of-type {
-      /* background-color: purple; */
-    }
-
     & > div {
-      /* background-color: yellow; */
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -81,9 +72,7 @@ const CartItemStyled = styled.div`
       }
 
       & > div {
-        /* background-color: green; */
         display: flex;
-        /* padding: 16px; */
         align-items: center;
 
         & > * {
