@@ -183,6 +183,16 @@ function Home() {
               filter).map((product, index) => <Product key={index} product={product} />)
           }
         </div>
+        <button
+          type="button"
+          onClick={() => {
+            const link = encodeURIComponent(`Olá, faça seu pedido.`);
+
+            window.location.href = "https://wa.me/+5521995784778?text=" + link;
+          }}
+        >
+          <ion-icon name="logo-whatsapp"></ion-icon>
+        </button>
       </StyledMain>
     </div>
   );
@@ -279,6 +289,19 @@ const StyledMain = styled.main`
   /* background-color: green; */
   position: relative;
   top: 100px;
+
+  & > button {
+    position: fixed;
+    bottom: 50px;
+    right: 0;
+    font-size: 25px;
+    color: white;
+    background-color: green;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    display: flex;
+  } 
 
   & > div:first-of-type {
     ul {
