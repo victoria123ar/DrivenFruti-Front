@@ -80,6 +80,7 @@ function Cart() {
         </div>
         <button
           type="button"
+          onClick={() => navigate('/sign-up')}
         >
           Criar conta
         </button>
