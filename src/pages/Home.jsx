@@ -4,15 +4,13 @@ import styled from "styled-components";
 import Product from "../components/Product";
 import Logo from "../images/logos/logo.png";
 import Context from "../context/Context";
-import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 
 function Home() {
   const [filter, setFilter] = useState([]);
   const [category, setCategory] = useState('all');
 
   const { userInfos, setGlobalProducts, globalProducts, total, setTotal } = useContext(Context);
-
-  const navigate = useNavigate();
 
   function calculateTotal() {
     const cartProducts = userInfos.cartIds
@@ -74,100 +72,37 @@ function Home() {
     };
   }, []);
 
+  const categories = [
+    ['all', 'Todos'],
+    ['fruits', 'Frutas'],
+    ['greens', 'Verduras'],
+    ['vegetables', 'Legumes'],
+    ['bakery', 'Padaria'],
+    ['organics', 'Orgânicos'],
+    ['drinks', 'Bebidas'],
+  ];
+
   return (
     <div>
-      <StyledHeader>
-        <div>
-          <figure>
-            <img alt="logo" src={Logo} />
-          </figure>
-          <div>
-            <StyledCartQuantity quantity={userInfos.cartIds.length}>
-              {userInfos.cartIds.length > 0 && userInfos.cartIds.length}
-            </StyledCartQuantity>
-            <StyledCartTotal quantity={userInfos.cartIds.length}>
-              {`R$ ${String(Number(total).toFixed(2)).replace('.', ',')}`}
-            </StyledCartTotal>
-            <button
-              type="button"
-              onClick={() => navigate('/cart')}
-            >
-              <ion-icon name="cart-outline"></ion-icon>
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/sign-in')}
-            >
-              <ion-icon name="log-in-outline"></ion-icon>
-            </button>
-          </div>
-        </div>
-        <input
-          type="text"
-          onChange={({ target }) => handleSearch(target)}
-          placeholder="Qual produto você procura?"
-        >
-        </input>
-      </StyledHeader>
+      <Header
+        Logo={Logo}
+        handleSearch={handleSearch}
+        userInfos={userInfos}
+        total={total}
+      />
       <StyledMain>
         <div>
           <ul>
-            <StyledCategory
-              type="button"
-              name="all"
-              category={category}
-              onClick={({ target }) => selectByCategory(target)}
-            >
-              Todos
-            </StyledCategory>
-            <StyledCategory
-              type="button"
-              name="fruits"
-              category={category}
-              onClick={({ target }) => selectByCategory(target)}
-            >
-              Frutas
-            </StyledCategory>
-            <StyledCategory
-              type="button"
-              name="greens"
-              category={category}
-              onClick={({ target }) => selectByCategory(target)}
-            >
-              Verduras
-            </StyledCategory>
-            <StyledCategory
-              type="button"
-              name="vegetables"
-              category={category}
-              onClick={({ target }) => selectByCategory(target)}
-            >
-              Legumes
-            </StyledCategory>
-            <StyledCategory
-              type="button"
-              name="bakery"
-              category={category}
-              onClick={({ target }) => selectByCategory(target)}
-            >
-              Padaria
-            </StyledCategory>
-            <StyledCategory
-              type="button"
-              name="organics"
-              category={category}
-              onClick={({ target }) => selectByCategory(target)}
-            >
-              Orgânicos
-            </StyledCategory>
-            <StyledCategory
-              type="button"
-              name="drinks"
-              category={category}
-              onClick={({ target }) => selectByCategory(target)}
-            >
-              Bebidas
-            </StyledCategory>
+            {categories.map((categoryType) =>
+              <StyledCategory
+                type="button"
+                name={categoryType[0]}
+                category={category}
+                onClick={({ target }) => selectByCategory(target)}
+              >
+                {categoryType[1]}
+              </StyledCategory>
+            )}
           </ul>
         </div>
         <div>
@@ -191,82 +126,6 @@ function Home() {
     </div>
   );
 };
-
-const StyledCartQuantity = styled.p`
-  position: absolute;
-  font-size: 18px;
-  background-color: red;
-  color: white;
-  padding: 4px;
-  border-radius: 10px 0 10px 0;
-  z-index: 1;
-  transform: translate(calc(100% + 8px), 100%);
-  display: ${({ quantity }) => quantity > 0 ? 'block' : 'none'};
-`;
-
-const StyledCartTotal = styled.p`
-  position: absolute;
-  font-size: 18px;
-  background-color: rgb(0, 0, 0, 0.2);
-  font-weight: 600;
-  color: green;
-  padding: 5px;
-  white-space: pre;
-  border-radius: 10px 0 10px 0;
-  z-index: 1;
-  transform: translate(calc(-100% + 10px), 10px);
-  display: ${({ quantity }) => quantity > 0 ? 'block' : 'none'};
-`;
-
-const StyledHeader = styled.header`
-  background-color: rgba(255, 255, 255, 0.8);
-  position: relative;
-  position: fixed;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  z-index: 2;
-  
-  & > div:first-of-type {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-
-    & > div {
-    font-size: 25px;
-
-    * {
-      margin: 4px;
-    }
-
-    button {
-      background-color: transparent;
-      border: none;
-      font-size: 25px;
-    }
-    button:hover {
-      background-color: green;
-    }
-    }
-    img{
-      margin-left: 20px;
-      width: 150px;
-    }
-  }
-
-  input {
-    padding: 7px;
-    border: 1px solid red;
-    border-left-width: 4px;
-    border-radius: 8px;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%);
-    top: 70px;
-    width: 90%;
-  }
-`;
 
 const StyledCategory = styled.button`
   margin: 8px;

@@ -12,8 +12,6 @@ function CartItem({ entry }) {
   useEffect(() => {
     const product = globalProducts.find(({ productId }) => productId === itemId);
 
-    console.log(product, itemId, globalProducts)
-
     setQuantity(quantityEntry);
     setItem(product);
   }, []);

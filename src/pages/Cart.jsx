@@ -110,7 +110,6 @@ const StyledMain = styled.main`
   overflow-y: auto;
 
   & > div:first-of-type {
-    /* background-color: red; */
     padding: 30px 10px 10px 10px;
     display: flex;
     flex-direction: column;
@@ -195,6 +194,5 @@ const StyledFooter = styled.footer`
     font-weight: 800;
   }
 `;
-
 
 export default Cart;
