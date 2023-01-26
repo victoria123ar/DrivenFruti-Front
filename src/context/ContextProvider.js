@@ -10,7 +10,7 @@ function ContextProvider({ children }) {
   const context = useMemo(() => ({
     ...dataProducts,
     ...userInfos,
-  }), [dataProducts, userInfos]);
+  }), [dataProducts.globalProducts.length, userInfos.userInfos.cartIds.length]);
 
   return (
     <Context.Provider value={context}>

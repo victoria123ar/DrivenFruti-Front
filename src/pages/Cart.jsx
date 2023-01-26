@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import CartItem from "../components/CartItem";
 import Context from "../context/Context";
@@ -6,6 +7,7 @@ import Context from "../context/Context";
 function Cart() {
   const { userInfos, globalProducts, total, setTotal } = useContext(Context);
   const [groups, setGroups] = useState([]);
+  const navigate = useNavigate();
 
   function calculateTotal() {
     const cartProducts = userInfos.cartIds
@@ -34,29 +36,42 @@ function Cart() {
   useEffect(() => groupItems(), []);
   useEffect(() => calculateTotal(), [userInfos.cartIds.length]);
 
+  const groupsLength = Object.entries(groups).length;
+
   return (
     <StyledCart>
       <StyledHeader>
         <h3>Meu Carrinho</h3>
-        <ion-icon name="close-outline"></ion-icon>
+        <button
+          type="button"
+          onClick={() => navigate('/')}
+        >
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
       </StyledHeader>
+      {groupsLength === 0 && <h2>Seu carrinho está vazio</h2>}
       <StyledMain>
         <ul>
-          {Object.entries(groups).map((entry) => <CartItem entry={entry} />)}
+          {groupsLength !== 0 &&
+            Object.entries(groups).map((entry) => <CartItem entry={entry} />)
+          }
         </ul>
-        <div>
-          <button
-            type="button"
-          >
-            Adicionar mais itens ao carrinho
-          </button>
-          <button
-            type="button"
-          >
-            <ion-icon name="trash-outline"></ion-icon>
-            Limpar carrinho
-          </button>
-        </div>
+        {groupsLength !== 0 &&
+          <div>
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+            >
+              Adicionar mais itens ao carrinho
+            </button>
+            <button
+              type="button"
+            >
+              <ion-icon name="trash-outline"></ion-icon>
+              Limpar carrinho
+            </button>
+          </div>
+        }
       </StyledMain>
       <StyledFooter>
         <div>
@@ -75,6 +90,14 @@ function Cart() {
 
 const StyledCart = styled.div`
   position: relative;
+
+  h2 {
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    font-size: 23px;
+  }
 `;
 
 const StyledMain = styled.main`
@@ -83,7 +106,7 @@ const StyledMain = styled.main`
   padding: 30px;
   height: min-content;
   max-height: calc(100vh - 190px);
-  overflow-y: scroll;
+  overflow-y: auto;
 
   & > div:first-of-type {
     /* background-color: red; */
@@ -124,6 +147,15 @@ const StyledHeader = styled.header`
   padding: 15px;
   background-color: rgba(240, 240, 240, 0.8);
   z-index: 1;
+
+  button {
+    background-color: transparent;
+    border: none;
+  }
+  button:hover {
+    color: green;
+    font-weight: 600;
+  }
 `;
 
 const StyledFooter = styled.footer`
