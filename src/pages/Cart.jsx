@@ -5,7 +5,7 @@ import CartItem from "../components/CartItem";
 import Context from "../context/Context";
 
 function Cart() {
-  const { userInfos, globalProducts, isLoggedIn } = useContext(Context);
+  const { userInfos, globalProducts, isLoggedIn, clearCart } = useContext(Context);
   const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
 
@@ -71,6 +71,7 @@ function Cart() {
             </button>
             <button
               type="button"
+              onClick={clearCart}
             >
               <ion-icon name="trash-outline"></ion-icon>
               Limpar carrinho
