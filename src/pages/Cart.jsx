@@ -5,7 +5,7 @@ import CartItem from "../components/CartItem";
 import Context from "../context/Context";
 
 function Cart() {
-  const { userInfos, globalProducts, total, setTotal } = useContext(Context);
+  const { userInfos, globalProducts } = useContext(Context);
   const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
 
@@ -13,9 +13,9 @@ function Cart() {
     const cartProducts = userInfos.cartIds
       .map((id) => globalProducts.find(({ productId }) => productId === id));
 
-    const total = cartProducts.reduce((acc, curr) => acc + curr.price, 0);
+    const totalNow = cartProducts.reduce((acc, curr) => acc + curr.price, 0);
 
-    setTotal(total.toFixed(2));
+    return totalNow.toFixed(2);
   };
 
   function groupItems() {
@@ -34,7 +34,9 @@ function Cart() {
   };
 
   useEffect(() => groupItems(), []);
-  useEffect(() => calculateTotal(), [userInfos.cartIds.length]);
+  useEffect(() => {
+    calculateTotal();
+  }, [userInfos.cartIds.length]);
 
   const groupsLength = Object.entries(groups).length;
 
@@ -53,7 +55,10 @@ function Cart() {
       <StyledMain>
         <ul>
           {groupsLength !== 0 &&
-            Object.entries(groups).map((entry) => <CartItem entry={entry} />)
+            Object.entries(groups).map((entry) => <CartItem
+              entry={entry}
+              key={entry[0] + entry[1]}
+            />)
           }
         </ul>
         {groupsLength !== 0 &&
@@ -76,7 +81,7 @@ function Cart() {
       <StyledFooter>
         <div>
           <p>Preço total</p>
-          <h3>{`R$ ${String(Number(total).toFixed(2)).replace('.', ',')}`}</h3>
+          <h3>{`R$ ${String(Number(calculateTotal()).toFixed(2)).replace('.', ',')}`}</h3>
         </div>
         <button
           type="button"

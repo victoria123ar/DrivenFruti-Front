@@ -1,10 +1,33 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import Context from "../context/Context";
 
-function Header({ userInfos, Logo, handleSearch, total }) {
+function Header({ userInfos, Logo, handleSearch }) {
+
+  const {
+    globalProducts,
+    setTotal,
+  } = useContext(Context);
+
+  const [redirect, setRedirect] = useState(false);
 
   const navigate = useNavigate();
+
+  function calculateTotal() {
+    const cartProducts = userInfos.cartIds
+      .map((id) => globalProducts.find(({ productId }) => productId === id));
+
+    const totalNow = cartProducts.reduce((acc, curr) => acc + curr.price, 0);
+
+    return totalNow.toFixed(2);
+  };
+
+  useEffect(() => {
+    if (redirect) {
+      navigate('/cart');
+    }
+  }, [redirect]);
 
   return (
     <div>
@@ -17,12 +40,16 @@ function Header({ userInfos, Logo, handleSearch, total }) {
             <StyledCartQuantity quantity={userInfos.cartIds.length}>
               {userInfos.cartIds.length > 0 && userInfos.cartIds.length}
             </StyledCartQuantity>
+
             <StyledCartTotal quantity={userInfos.cartIds.length}>
-              {`R$ ${String(Number(total).toFixed(2)).replace('.', ',')}`}
+              {`R$ ${String(Number(calculateTotal()).toFixed(2)).replace('.', ',')}`}
             </StyledCartTotal>
             <button
               type="button"
-              onClick={() => navigate('/cart')}
+              onClick={() => {
+                setTotal(calculateTotal());
+                setRedirect(true);
+              }}
             >
               <ion-icon name="cart-outline"></ion-icon>
             </button>

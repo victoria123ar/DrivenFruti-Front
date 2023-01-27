@@ -11,12 +11,12 @@ function Product({ product }) {
     productId,
   } = product;
 
-  const { userInfos, setUserInfos } = useContext(Context);
+  const { userInfos, addToCart } = useContext(Context);
 
   return (
     <StyledProduct>
       <figure>
-        <img alt="product" src={`./images/${thumbnail}`} />
+        <img alt="product" src={`${thumbnail}`} />
       </figure>
       <div>
         <div>
@@ -28,12 +28,7 @@ function Product({ product }) {
             userInfos.cartIds.filter((id) => id === productId).length === 0 ?
               <button
                 type="button"
-                onClick={() => {
-                  setUserInfos((prevState) => ({
-                    ...prevState,
-                    cartIds: [...prevState.cartIds, productId],
-                  }));
-                }}
+                onClick={() => addToCart(productId)}
               >
                 <ion-icon name="add-circle"></ion-icon>
               </button> :

@@ -10,16 +10,13 @@ function Home() {
   const [filter, setFilter] = useState([]);
   const [category, setCategory] = useState('all');
 
-  const { userInfos, setGlobalProducts, globalProducts, total, setTotal } = useContext(Context);
-
-  function calculateTotal() {
-    const cartProducts = userInfos.cartIds
-      .map((id) => globalProducts.find(({ productId }) => productId === id));
-
-    const total = cartProducts.reduce((acc, curr) => acc + curr.price, 0);
-
-    setTotal(total.toFixed(2));
-  };
+  const {
+    userInfos,
+    setUserInfos,
+    setGlobalProducts,
+    globalProducts,
+    isLoggedIn,
+  } = useContext(Context);
 
   function handleSearch(target) {
     const { value } = target;
@@ -46,23 +43,64 @@ function Home() {
   };
 
   useEffect(() => {
-    calculateTotal();
-  }, [userInfos.cartIds.length]);
-
-  useEffect(() => {
-    const URL = 'http://localhost:5000';
+    const URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     const controller = new AbortController();
     const signal = controller.signal;
+    const config = {
+      headers: {
+        Authorization: userInfos.token,
+      }
+    }
 
     const fetcher = async () => {
-      const productsData = await axios.post(URL, {}, { signal });
-      const { data } = productsData;
+      try {
+        if (isLoggedIn) {
+          const userData = await axios.get(`${URL}/cart`, config, { signal });
+          return setUserInfos((prevState) => {
+            return ({
+              ...prevState,
+              cartIds: userData.data.cartIds,
+            })
+          });
+        }
+      } catch (error) {
+        console.log('Erro: ', error);
+        throw new Error(error);
+      }
+    }
+    fetcher();
 
-      data.sort(() => .5 - Math.random()); // shuffle array
+    return () => {
+      console.log('Cleaning...');
+      controller.abort();
+    };
+  }, [isLoggedIn]);
 
-      data.forEach((product) => product.quantity = 0);
+  useEffect(() => {
+    const URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const config = {
+      headers: {
+        Authorization: userInfos.token,
+      }
+    }
 
-      setGlobalProducts(data);
+    const fetcher = async () => {
+      try {
+        const productsData = await axios.post(URL, {}, { signal });
+        const { data } = productsData;
+
+        data.sort(() => .5 - Math.random()); // shuffle array
+
+        data.forEach((product) => product.quantity = 0);
+
+        setGlobalProducts(data);
+
+      } catch (error) {
+        console.log('Erro: ', error);
+        throw new Error(error);
+      }
     }
     fetcher();
 
@@ -88,13 +126,13 @@ function Home() {
         Logo={Logo}
         handleSearch={handleSearch}
         userInfos={userInfos}
-        total={total}
       />
       <StyledMain>
         <div>
           <ul>
             {categories.map((categoryType) =>
               <StyledCategory
+                key={categoryType[0]}
                 type="button"
                 name={categoryType[0]}
                 category={category}
