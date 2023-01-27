@@ -5,7 +5,7 @@ import CartItem from "../components/CartItem";
 import Context from "../context/Context";
 
 function Cart() {
-  const { userInfos, globalProducts } = useContext(Context);
+  const { userInfos, globalProducts, isLoggedIn, clearCart } = useContext(Context);
   const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
 
@@ -71,6 +71,7 @@ function Cart() {
             </button>
             <button
               type="button"
+              onClick={clearCart}
             >
               <ion-icon name="trash-outline"></ion-icon>
               Limpar carrinho
@@ -85,9 +86,9 @@ function Cart() {
         </div>
         <button
           type="button"
-          onClick={() => navigate('/sign-up')}
+          onClick={() => isLoggedIn ? '' : navigate('/sign-up')}
         >
-          Criar conta
+          {isLoggedIn ? 'Fechar compra' : 'Criar conta'}
         </button>
       </StyledFooter>
     </StyledCart>
