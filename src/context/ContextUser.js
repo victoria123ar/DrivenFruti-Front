@@ -57,6 +57,23 @@ function ContextUser() {
     };
   }, [userInfos.cartIds.length]);
 
+  function removeAllItems(productId) {
+    const newCart = userInfos.cartIds.filter((id) => id !== productId);
+
+    return setUserInfos((prevState) => ({
+      ...prevState,
+      cartIds: newCart,
+    }));
+  };
+
+  function clearCart() {
+    console.log('cleaning cart up')
+    return setUserInfos((prevState) => ({
+      ...prevState,
+      cartIds: [],
+    }));
+  };
+
   function addToCart(productId) {
     return setUserInfos((prevState) => ({
       ...prevState,
@@ -95,6 +112,8 @@ function ContextUser() {
     setTotal,
     addToCart,
     removeFromCart,
+    clearCart,
+    removeAllItems,
     isLoggedIn,
     setIsLoggedIn,
   };
