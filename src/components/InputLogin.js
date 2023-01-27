@@ -1,14 +1,15 @@
 import styled from "styled-components";
 import { CiLogin } from "react-icons/ci";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import axios from "axios";
+import Context from "../context/Context";
 
 export default function InputLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const [disabled, setDisabled] = useState(false);
+
+  const { setUserInfos, setIsLoggedIn } = useContext(Context);
 
   function login(e) {
     e.preventDefault();
@@ -22,11 +23,16 @@ export default function InputLogin() {
     axios
       .post(`${process.env.REACT_APP_API_URL}/sign-in`, postData)
       .then((resposta) => {
-        console.log(resposta);
-        navigate("/");
+        setUserInfos((prevState) => {
+          return ({
+            ...prevState,
+            token: resposta.data.token,
+          })
+        });
+        setIsLoggedIn(true);
       })
       .catch((erro) => {
-        alert(erro.response.data.message);
+        alert(erro.response.data);
         setDisabled(false);
       });
   }
