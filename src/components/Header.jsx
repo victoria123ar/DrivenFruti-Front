@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -10,9 +11,12 @@ function Header({ userInfos, Logo, handleSearch }) {
     setTotal,
   } = useContext(Context);
 
-  const [redirect, setRedirect] = useState(false);
+  const [redirectToCart, setRedirectToCart] = useState(false);
+  const [reload, setReload] = useState(false);
 
   const navigate = useNavigate();
+
+  const token = localStorage.getItem('token');
 
   function calculateTotal() {
     const cartProducts = userInfos.cartIds
@@ -24,10 +28,37 @@ function Header({ userInfos, Logo, handleSearch }) {
   };
 
   useEffect(() => {
-    if (redirect) {
+    if (redirectToCart) {
       navigate('/cart');
     }
-  }, [redirect]);
+  }, [redirectToCart]);
+
+  useEffect(() => {
+    if (!token && reload) {
+      setReload((prevState) => !prevState);
+      window.location.reload();
+    }
+  }, [token]);
+
+  async function logOut() {
+    try {
+      const URL = process.env.REACT_APP_API_URL;
+      const config = {
+        headers: {
+          authorization: token,
+        },
+      };
+
+      await axios.delete(`${URL}/sign-out`, config);
+      localStorage.removeItem('token');
+      setReload((prevState) => !prevState);
+
+    } catch (error) {
+      console.log('Erro: ', error);
+      throw new Error(error);
+    }
+    console.log(token)
+  };
 
   return (
     <div>
@@ -37,27 +68,31 @@ function Header({ userInfos, Logo, handleSearch }) {
             <img alt="logo" src={Logo} />
           </figure>
           <div>
-            <StyledCartQuantity quantity={userInfos.cartIds.length}>
-              {userInfos.cartIds.length > 0 && userInfos.cartIds.length}
+            <StyledCartQuantity
+              quantity={userInfos.cartIds.length}
+            >
+              {userInfos.cartIds.length}
             </StyledCartQuantity>
 
-            <StyledCartTotal quantity={userInfos.cartIds.length}>
+            <StyledCartTotal
+              quantity={userInfos.cartIds.length}
+            >
               {`R$ ${String(Number(calculateTotal()).toFixed(2)).replace('.', ',')}`}
             </StyledCartTotal>
             <button
               type="button"
               onClick={() => {
                 setTotal(calculateTotal());
-                setRedirect(true);
+                setRedirectToCart(true);
               }}
             >
               <ion-icon name="cart-outline"></ion-icon>
             </button>
             <button
               type="button"
-              onClick={() => navigate('/sign-in')}
+              onClick={() => token ? logOut() : navigate('/sign-in')}
             >
-              <ion-icon name="log-in-outline"></ion-icon>
+              <ion-icon name={`log-${token ? 'out' : 'in'}-outline`}></ion-icon>
             </button>
           </div>
         </div>

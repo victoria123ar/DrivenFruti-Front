@@ -16,6 +16,7 @@ function Home() {
     setGlobalProducts,
     globalProducts,
     isLoggedIn,
+    setIsLoggedIn,
   } = useContext(Context);
 
   function handleSearch(target) {
@@ -43,24 +44,27 @@ function Home() {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     const URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     const controller = new AbortController();
     const signal = controller.signal;
     const config = {
       headers: {
-        Authorization: userInfos.token,
+        Authorization: token,
       }
     }
 
     const fetcher = async () => {
+
       try {
-        if (isLoggedIn) {
+        if (token) {
           const userData = await axios.get(`${URL}/cart`, config, { signal });
+
           return setUserInfos((prevState) => {
             return ({
               ...prevState,
               cartIds: userData.data.cartIds,
-            })
+            });
           });
         }
       } catch (error) {
@@ -88,14 +92,24 @@ function Home() {
 
     const fetcher = async () => {
       try {
+        const token = localStorage.getItem('token');
         const productsData = await axios.post(URL, {}, { signal });
         const { data } = productsData;
 
         data.sort(() => .5 - Math.random()); // shuffle array
-
         data.forEach((product) => product.quantity = 0);
 
         setGlobalProducts(data);
+
+        if (token) {
+          // setUserInfos((prevState) => ({
+          //   ...prevState,
+          //   token,
+          // }));
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
 
       } catch (error) {
         console.log('Erro: ', error);
