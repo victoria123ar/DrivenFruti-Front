@@ -30,9 +30,32 @@ export default function InputLogin() {
           })
         });
         setIsLoggedIn(true);
+
+        localStorage.setItem('token', resposta.data.token);
+
+        const config = {
+          headers: {
+            Authorization: resposta.data.token,
+          },
+        };
+
+        axios
+          .get(`${process.env.REACT_APP_API_URL}/cart`, config)
+          .then(({ data }) => {
+            return setUserInfos((prevState) => {
+              return ({
+                ...prevState,
+                cartIds: data.cartIds,
+              });
+            });
+          })
       })
       .catch((erro) => {
-        alert(erro.response.data);
+        if(erro.response.status === 401){
+          alert('E-mail ou senha inválidos!');
+        }else{
+          alert(erro.message.data.status);
+       }
         setDisabled(false);
       });
   }

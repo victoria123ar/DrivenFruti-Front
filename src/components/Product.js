@@ -2,119 +2,44 @@ import React, { useContext } from "react";
 import styled from "styled-components";
 import Context from "../context/Context";
 import CartItemsHandler from "./CartItemsHandler";
+import Informations from "./Informations";
 
 function Product({ product }) {
-  const {
-    name,
-    price,
-    thumbnail,
-    productId,
-  } = product;
+  const { thumbnail, productId } = product;
 
   const { userInfos, addToCart } = useContext(Context);
 
   return (
     <StyledProduct>
-      <figure>
         <img alt="product" src={`${thumbnail}`} />
-      </figure>
-      <div>
-        <div>
-          <p>{`R$ ${String(Number(price).toFixed(2)).replace('.', ',')}`}</p>
-          <p>{name}</p>
-        </div>
-        <div>
-          {
-            userInfos.cartIds.filter((id) => id === productId).length === 0 ?
-              <button
-                type="button"
-                onClick={() => addToCart(productId)}
-              >
-                <ion-icon name="add-circle"></ion-icon>
-              </button> :
-              <CartItemsHandler productId={productId} />
-          }
-        </div>
-      </div>
-    </StyledProduct >
-  )
-};
+      {userInfos.cartIds.filter((id) => id === productId).length === 0 ? (
+        <Informations product={product} addToCart={addToCart} />
+      ) : (
+        <CartItemsHandler productId={productId} />
+      )}
+    </StyledProduct>
+  );
+}
 
 export default Product;
 
 const StyledProduct = styled.div`
-  border: 1px solid rgba(0, 0, 0, 0.2 );
+box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   width: 200px;
-  height: 200px;
+  height: 250px;
   margin: 15px;
   padding: 18px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-
-  figure {
-    width: 100%;
-    height: 70%;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
 
   img {
-    width: 100%;
-    height: 100%;
-  }
-
-  & > div {
-    height: 30%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    p:first-of-type {
-      font-size: 24px;
-      color: green;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-
-    p:nth-of-type(2) {
-      color: rgba(0, 0, 0, 0.5);
-    }
-
-    & > div:nth-of-type(2) {
-      position: relative;
-
-      & > button {
-        font-size: 22px;
-        color: green;
-        padding: 15px;
-        border: none;
-        background-color: transparent;
-      }
-
-      & > div {
-        background-color: rgb(240, 240, 240);
-        display: flex;
-        padding: 3px;
-        border: 1px solid rgba(0, 0, 0, 0.4);
-        border-radius: 15px;
-        position: absolute;
-        right: -10px;
-        bottom: -40px;
-
-        * {
-          margin: 2px;
-          background-color: transparent;
-          border: none;
-          font-size: 22px;
-        }
-
-        p {
-          border: 1px solid green;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border-radius: 9px;
-          padding: 10px;
-        }
-      }
-    }
+    width: 70%;
+    margin-bottom: 15px;
   }
 `;

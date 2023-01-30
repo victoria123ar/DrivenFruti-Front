@@ -34,7 +34,7 @@ function ContextUser() {
     }
 
     const fetcher = async () => {
-      if (userInfos.token !== '') {
+      if (userInfos.token) {
         try {
           await axios.put(
             `${URL}/cart`,
@@ -68,6 +68,7 @@ function ContextUser() {
 
   function clearCart() {
     console.log('cleaning cart up')
+
     return setUserInfos((prevState) => ({
       ...prevState,
       cartIds: [],
@@ -75,6 +76,8 @@ function ContextUser() {
   };
 
   function addToCart(productId) {
+    console.log('add')
+
     return setUserInfos((prevState) => ({
       ...prevState,
       cartIds: [...prevState.cartIds, productId],
