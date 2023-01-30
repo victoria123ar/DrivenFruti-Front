@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import CartItem from "../components/CartItem";
 import Context from "../context/Context";
+import Logo from "../images/logos/gif.gif"
 
 function Cart() {
   const { userInfos, globalProducts, total, setTotal } = useContext(Context);
@@ -41,6 +42,7 @@ function Cart() {
   return (
     <StyledCart>
       <StyledHeader>
+      <img alt="logo" src={Logo} />
         <h3>Meu Carrinho</h3>
         <button
           type="button"
@@ -101,6 +103,39 @@ const StyledCart = styled.div`
   }
 `;
 
+const StyledHeader = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  width: 100%;
+  min-height: 50px;
+  padding: 15px;
+  background-color: rgba(240, 240, 240, 0.8);
+  z-index: 1;
+
+img{
+  width: 100px;
+}
+
+  h3{
+
+  }
+
+  button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    color: #D81C16;
+    font-weight: 600;
+  }
+  ion-icon{
+    font-size: 26px;
+  }
+`;
+
 const StyledMain = styled.main`
   position: absolute;
   top: 50px;
@@ -134,27 +169,6 @@ const StyledMain = styled.main`
         }
       }
     }
-  }
-`;
-
-const StyledHeader = styled.header`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: fixed;
-  width: 100%;
-  min-height: 50px;
-  padding: 15px;
-  background-color: rgba(240, 240, 240, 0.8);
-  z-index: 1;
-
-  button {
-    background-color: transparent;
-    border: none;
-  }
-  button:hover {
-    color: green;
-    font-weight: 600;
   }
 `;
 

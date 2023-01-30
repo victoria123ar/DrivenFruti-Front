@@ -22,11 +22,15 @@ export default function InputLogin() {
     axios
       .post(`${process.env.REACT_APP_API_URL}/sign-in`, postData)
       .then((resposta) => {
-        console.log(resposta);
         navigate("/");
       })
       .catch((erro) => {
-        alert(erro.response.data.message);
+/*         if(erro.response.status === 401){
+          alert('E-mail ou senha inválidos!');
+        }else{ */
+          alert(erro.message);
+/*         } */
+        
         setDisabled(false);
       });
   }

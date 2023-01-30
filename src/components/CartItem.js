@@ -19,7 +19,7 @@ function CartItem({ entry }) {
   return (
     <CartItemStyled>
       <figure>
-        <img alt="thumbnail" src={`./images/${item?.thumbnail}`} />
+        <img alt="thumbnail" src={`${item?.thumbnail}`} />
       </figure>
       <div>
         <p>{item?.name}</p>
