@@ -44,7 +44,7 @@ function Cart() {
   return (
     <StyledCart>
       <StyledHeader>
-        <img alt="logo" src={Logo} />
+      <img alt="logo" src={Logo} />
         <h3>Meu Carrinho</h3>
         <button
           type="button"
