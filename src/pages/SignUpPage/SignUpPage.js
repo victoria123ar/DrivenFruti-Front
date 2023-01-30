@@ -1,41 +1,15 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ContainerInputs, SignUpLayout, Container } from "./styled";
-import Messages from "../../components/Messages";
+import axios from "axios";
 import logo from "../../assets/logos/bigLogoSticker.png"
-
-import happy from "../../assets/pet/pet2Sticker.png"
-import confused from "../../assets/pet/pet3Sticker.png"
 
 export default function SignUpPage() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' })
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const [pet, setPet] = useState(null)
-  const [background, setBackground] = useState(null)
-  const [msg, setMsg] = useState(null)
-  const [left, setLeft] = useState("1000px")
-
-  function changeMessage(res) {
-    if (res === "created") {
-      setPet(happy)
-      setBackground("#49AD0D")
-      setMsg("Cadastro concluido!")
-      setLeft("0")
-    }
-
-    if (res === "ErrPassword") {
-      setPet(confused)
-      setBackground("#FB5754")
-      setMsg("Senhas não se coincidem")
-      setLeft("0")
-    }
-
-    if (res === "exit") {
-      setLeft("1000px")
-    }
-  }
+  const navigate = useNavigate()
 
   function handleChange(e) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,22 +20,27 @@ export default function SignUpPage() {
     setLoading(true)
 
     if (confirmPassword === formData.password) {
-      setLoading(false)
-      changeMessage("created")
 
+      axios.post(`${process.env.REACT_APP_API_URL}/sign-up`, { ...formData})
+           .then(() => {
+                setLoading(false)
+                navigate("/sign-in")
+           })
+            .catch(err => {
+                alert(`Ocorreu um erro: ${err.response.data}`)
+                setLoading(false)
+           })
 
     } else {
-      changeMessage("ErrPassword")
+      alert("As senhas informadas não se coincidem!")
       setLoading(false)
     }
 
-    setTimeout(() => changeMessage("exit"), 1700)
   }
 
   return (
     <SignUpLayout>
       <Container>
-        <Messages pet={pet} background={background} msg={msg} left={left} />
 
         <img src={logo} />
 
