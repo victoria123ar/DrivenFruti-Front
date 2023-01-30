@@ -179,7 +179,7 @@ function Home() {
 
 const StyledMain = styled.main`
   width: 100vw;
-  height: 100vh;
+  height: 100%;
   box-sizing: border-box;
   background-color: #f7f9f6;
   position: relative;

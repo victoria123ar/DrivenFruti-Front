@@ -76,15 +76,16 @@ function Header({ userInfos, Logo, handleSearch}) {
         <StyledCartTotal quantity={userInfos.cartIds.length}>
           {`R$ ${String(Number(calculateTotal()).toFixed(2)).replace(".", ",")}`}
         </StyledCartTotal>
-        
         <button
               type="button"
               onClick={() => token ? logOut() : navigate('/sign-in')}
             >
-        </button>
-        <button>
               <ion-icon name={`log-${token ? 'out' : 'in'}-outline`}></ion-icon>
-        </button>
+            </button>
+
+        <button type="button" onClick={() => navigate("/cart")}>
+          <ion-icon name="cart-outline"></ion-icon>
+          </button>
       </Icons>
     </StyledHeader>
   );
