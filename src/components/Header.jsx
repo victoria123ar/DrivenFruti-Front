@@ -1,19 +1,62 @@
-import React from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { SlLogin, SlLogout } from "react-icons/sl";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import Context from "../context/Context";
 
-function Header({ userInfos, Logo, handleSearch, total }) {
-  const [icon, setIcon] = useState("logged");
+function Header({ userInfos, Logo, handleSearch}) {
+  const {
+    globalProducts,
+    setTotal,
+  } = useContext(Context);
+
+  const [redirectToCart, setRedirectToCart] = useState(false);
+  const [reload, setReload] = useState(false);
+
   const navigate = useNavigate();
 
-  const changeIcon = (state) => {
-    if (state === "logged") {
-      return "logout";
+  const token = localStorage.getItem('token');
+
+  function calculateTotal() {
+    const cartProducts = userInfos.cartIds
+      .map((id) => globalProducts.find(({ productId }) => productId === id));
+
+    const totalNow = cartProducts.reduce((acc, curr) => acc + curr.price, 0);
+
+    return totalNow.toFixed(2);
+  };
+
+  useEffect(() => {
+    if (redirectToCart) {
+      navigate('/cart');
     }
-    return "login";
+  }, [redirectToCart]);
+
+  useEffect(() => {
+    if (!token && reload) {
+      setReload((prevState) => !prevState);
+      window.location.reload();
+    }
+  }, [token]);
+
+  async function logOut() {
+    try {
+      const URL = process.env.REACT_APP_API_URL;
+      const config = {
+        headers: {
+          authorization: token,
+        },
+      };
+
+      await axios.delete(`${URL}/sign-out`, config);
+      localStorage.removeItem('token');
+      setReload((prevState) => !prevState);
+
+    } catch (error) {
+      console.log('Erro: ', error);
+      throw new Error(error);
+    }
+    console.log(token)
   };
 
   return (
@@ -31,18 +74,16 @@ function Header({ userInfos, Logo, handleSearch, total }) {
           {userInfos.cartIds.length > 0 && userInfos.cartIds.length}
         </StyledCartQuantity>
         <StyledCartTotal quantity={userInfos.cartIds.length}>
-          {`R$ ${String(Number(total).toFixed(2)).replace(".", ",")}`}
+          {`R$ ${String(Number(calculateTotal()).toFixed(2)).replace(".", ",")}`}
         </StyledCartTotal>
-        <Link to="/sign-in" style={{ textDecoration: "none" }}>
-          <button
-            type="button"
-            onClick={() => setIcon((old) => changeIcon(old))}
-          >
-            {icon === "logged" ? <SlLogin /> : <SlLogout />}
-          </button>
-        </Link>
-        <button type="button" onClick={() => navigate("/cart")}>
-          <ion-icon name="cart-outline"></ion-icon>
+        
+        <button
+              type="button"
+              onClick={() => token ? logOut() : navigate('/sign-in')}
+            >
+        </button>
+        <button>
+              <ion-icon name={`log-${token ? 'out' : 'in'}-outline`}></ion-icon>
         </button>
       </Icons>
     </StyledHeader>

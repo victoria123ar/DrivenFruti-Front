@@ -4,7 +4,7 @@ import Context from "../context/Context";
 import CartItemsHandler from "./CartItemsHandler";
 
 function CartItem({ entry }) {
-  const { globalProducts } = useContext(Context);
+  const { globalProducts, removeAllItems } = useContext(Context);
   const [item, setItem] = useState(null);
   const [quantity, setQuantity] = useState(0);
   const [itemId, quantityEntry] = entry;
@@ -19,7 +19,7 @@ function CartItem({ entry }) {
   return (
     <CartItemStyled>
       <figure>
-        <img alt="thumbnail" src={`${item?.thumbnail}`} />
+        <img alt={item?.name} src={`${item?.thumbnail}`} />
       </figure>
       <div>
         <p>{item?.name}</p>
@@ -29,7 +29,12 @@ function CartItem({ entry }) {
           </h3>
           <div>
             <CartItemsHandler productId={itemId} />
-            <ion-icon name="trash-outline"></ion-icon>
+            <button
+              type="button"
+              onClick={() => removeAllItems(itemId)}
+            >
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
           </div>
         </div>
       </div>
@@ -72,6 +77,11 @@ const CartItemStyled = styled.div`
       & > div {
         display: flex;
         align-items: center;
+
+        & > button:first-of-type {
+          background-color: transparent;
+          border: none;
+        }
 
         & > * {
           margin: 5px;

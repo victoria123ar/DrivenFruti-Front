@@ -8,82 +8,130 @@ import Header from "../components/Header";
 
 function Home() {
   const [filter, setFilter] = useState([]);
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState('all');
 
-  const { userInfos, setGlobalProducts, globalProducts, total, setTotal } =
-    useContext(Context);
-
-  function calculateTotal() {
-    const cartProducts = userInfos.cartIds.map((id) =>
-      globalProducts.find(({ productId }) => productId === id)
-    );
-
-    const total = cartProducts.reduce((acc, curr) => acc + curr.price, 0);
-
-    setTotal(total.toFixed(2));
-  }
+  const {
+    userInfos,
+    setUserInfos,
+    setGlobalProducts,
+    globalProducts,
+    isLoggedIn,
+    setIsLoggedIn,
+  } = useContext(Context);
 
   function handleSearch(target) {
     const { value } = target;
-    const productsFiltered = globalProducts.filter(({ name }) =>
-      name.toLowerCase().includes(value.toLowerCase())
-    );
+    const productsFiltered = globalProducts
+      .filter(({ name }) => name.toLowerCase().includes(value.toLowerCase()));
 
     setFilter(productsFiltered);
-  }
+  };
 
   function selectByCategory(target) {
     const { name } = target;
 
-    if (name === "all") {
-      setCategory("all");
+    if (name === 'all') {
+      setCategory('all');
       setFilter([]);
       return;
-    }
+    };
 
-    const productsFiltered = globalProducts.filter(
-      ({ category }) => category === name
-    );
+    const productsFiltered = globalProducts
+      .filter(({ category }) => category === name);
 
     setCategory(name);
     setFilter(productsFiltered);
-  }
+  };
 
   useEffect(() => {
-    calculateTotal();
-  }, [userInfos.cartIds.length]);
-
-  useEffect(() => {
-    const URL = "http://localhost:5000";
+    const token = localStorage.getItem('token');
+    const URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
     const controller = new AbortController();
     const signal = controller.signal;
+    const config = {
+      headers: {
+        Authorization: token,
+      }
+    }
 
     const fetcher = async () => {
-      const productsData = await axios.post(URL, {}, { signal });
-      const { data } = productsData;
 
-      data.sort(() => 0.5 - Math.random()); // shuffle array
+      try {
+        if (token) {
+          const userData = await axios.get(`${URL}/cart`, config, { signal });
 
-      data.forEach((product) => (product.quantity = 0));
-
-      setGlobalProducts(data);
-    };
+          return setUserInfos((prevState) => {
+            return ({
+              ...prevState,
+              cartIds: userData.data.cartIds,
+            });
+          });
+        }
+      } catch (error) {
+        console.log('Erro: ', error);
+        throw new Error(error);
+      }
+    }
     fetcher();
 
     return () => {
-      console.log("Cleaning...");
+      console.log('Cleaning...');
+      controller.abort();
+    };
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    const URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+    const controller = new AbortController();
+    const signal = controller.signal;
+    const config = {
+      headers: {
+        Authorization: userInfos.token,
+      }
+    }
+
+    const fetcher = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const productsData = await axios.post(URL, {}, { signal });
+        const { data } = productsData;
+
+        data.sort(() => .5 - Math.random()); // shuffle array
+        data.forEach((product) => product.quantity = 0);
+
+        setGlobalProducts(data);
+
+        if (token) {
+          // setUserInfos((prevState) => ({
+          //   ...prevState,
+          //   token,
+          // }));
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+
+      } catch (error) {
+        console.log('Erro: ', error);
+        throw new Error(error);
+      }
+    }
+    fetcher();
+
+    return () => {
+      console.log('Cleaning...');
       controller.abort();
     };
   }, []);
 
   const categories = [
-    ["all", "Todos"],
-    ["fruits", "Frutas"],
-    ["greens", "Verduras"],
-    ["vegetables", "Legumes"],
-    ["bakery", "Padaria"],
-    ["organics", "Orgânicos"],
-    ["drinks", "Bebidas"],
+    ['all', 'Todos'],
+    ['fruits', 'Frutas'],
+    ['greens', 'Verduras'],
+    ['vegetables', 'Legumes'],
+    ['bakery', 'Padaria'],
+    ['organics', 'Orgânicos'],
+    ['drinks', 'Bebidas'],
   ];
 
   return (
@@ -92,12 +140,12 @@ function Home() {
         Logo={Logo}
         handleSearch={handleSearch}
         userInfos={userInfos}
-        total={total}
       />
       <StyledMain>
         <Categories>
           {categories.map((categoryType) => (
             <StyledCategory
+            key={categoryType[0]}
               type="button"
               name={categoryType[0]}
               category={category}
@@ -208,3 +256,4 @@ const StyledCategory = styled.button`
 `;
 
 export default Home;
+

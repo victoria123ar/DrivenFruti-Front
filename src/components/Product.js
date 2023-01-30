@@ -7,13 +7,13 @@ import Informations from "./Informations";
 function Product({ product }) {
   const { thumbnail, productId } = product;
 
-  const { userInfos } = useContext(Context);
+  const { userInfos, addToCart } = useContext(Context);
 
   return (
     <StyledProduct>
         <img alt="product" src={`${thumbnail}`} />
       {userInfos.cartIds.filter((id) => id === productId).length === 0 ? (
-        <Informations product={product} />
+        <Informations product={product} addToCart={addToCart} />
       ) : (
         <CartItemsHandler productId={productId} />
       )}

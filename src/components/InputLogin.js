@@ -1,14 +1,15 @@
 import styled from "styled-components";
 import { CiLogin } from "react-icons/ci";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import axios from "axios";
+import Context from "../context/Context";
 
 export default function InputLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate();
   const [disabled, setDisabled] = useState(false);
+
+  const { setUserInfos, setIsLoggedIn } = useContext(Context);
 
   function login(e) {
     e.preventDefault();
@@ -22,15 +23,39 @@ export default function InputLogin() {
     axios
       .post(`${process.env.REACT_APP_API_URL}/sign-in`, postData)
       .then((resposta) => {
-        navigate("/");
+        setUserInfos((prevState) => {
+          return ({
+            ...prevState,
+            token: resposta.data.token,
+          })
+        });
+        setIsLoggedIn(true);
+
+        localStorage.setItem('token', resposta.data.token);
+
+        const config = {
+          headers: {
+            Authorization: resposta.data.token,
+          },
+        };
+
+        axios
+          .get(`${process.env.REACT_APP_API_URL}/cart`, config)
+          .then(({ data }) => {
+            return setUserInfos((prevState) => {
+              return ({
+                ...prevState,
+                cartIds: data.cartIds,
+              });
+            });
+          })
       })
       .catch((erro) => {
-/*         if(erro.response.status === 401){
+        if(erro.response.status === 401){
           alert('E-mail ou senha inválidos!');
-        }else{ */
-          alert(erro.message);
-/*         } */
-        
+        }else{
+          alert(erro.message.data.status);
+       }
         setDisabled(false);
       });
   }

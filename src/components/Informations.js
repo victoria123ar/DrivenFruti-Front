@@ -5,7 +5,7 @@ import Context from "../context/Context";
 export default function Information({ product }) {
   const { name, price, productId } = product;
 
-  const { setUserInfos } = useContext(Context);
+  const { setUserInfos, addToCart } = useContext(Context);
 
   return (
     <Informations>
@@ -18,12 +18,7 @@ export default function Information({ product }) {
       </Text>
       <Button
         type="button"
-        onClick={() => {
-          setUserInfos((prevState) => ({
-            ...prevState,
-            cartIds: [...prevState.cartIds, productId],
-          }));
-        }}
+        onClick={() => addToCart(productId)}
       >
         <ion-icon name="add-circle"></ion-icon>
       </Button>
