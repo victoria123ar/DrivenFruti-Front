@@ -6,7 +6,7 @@ import Context from "../context/Context";
 import Logo from "../images/logos/gif.gif"
 
 function Cart() {
-  const { userInfos, globalProducts, isLoggedIn, clearCart, checkoutInfos, setCheckoutInfos } = useContext(Context);
+  const { userInfos, globalProducts, isLoggedIn, clearCart } = useContext(Context);
   const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
 
@@ -44,7 +44,7 @@ function Cart() {
   return (
     <StyledCart>
       <StyledHeader>
-      <img alt="logo" src={Logo} />
+        <img alt="logo" src={Logo} />
         <h3>Meu Carrinho</h3>
         <button
           type="button"
@@ -90,10 +90,6 @@ function Cart() {
           type="button"
           onClick={() => {
             if (isLoggedIn) {
-              setCheckoutInfos({
-                groups,
-                total: calculateTotal(),
-              });
               navigate('/checkout', { state: { groups, total: calculateTotal() } });
             } else {
               navigate('/sign-in');

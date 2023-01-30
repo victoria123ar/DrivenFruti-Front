@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Context from "../context/Context";
 
-function Header({ userInfos, Logo, handleSearch}) {
+function Header({ userInfos, Logo, handleSearch }) {
   const {
     globalProducts,
     setTotal,
@@ -76,14 +76,20 @@ function Header({ userInfos, Logo, handleSearch}) {
         <StyledCartTotal quantity={userInfos.cartIds.length}>
           {`R$ ${String(Number(calculateTotal()).toFixed(2)).replace(".", ",")}`}
         </StyledCartTotal>
-        
+
         <button
-              type="button"
-              onClick={() => token ? logOut() : navigate('/sign-in')}
-            >
+          type="button"
+          onClick={() => token ? logOut() : navigate('/sign-in')}
+        >
         </button>
         <button>
-              <ion-icon name={`log-${token ? 'out' : 'in'}-outline`}></ion-icon>
+          <ion-icon name={`log-${token ? 'out' : 'in'}-outline`}></ion-icon>
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate('/cart')}
+        >
+          <ion-icon name={`cart-outline`}></ion-icon>
         </button>
       </Icons>
     </StyledHeader>
