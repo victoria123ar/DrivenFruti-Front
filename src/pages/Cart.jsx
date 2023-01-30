@@ -5,7 +5,7 @@ import CartItem from "../components/CartItem";
 import Context from "../context/Context";
 
 function Cart() {
-  const { userInfos, globalProducts, isLoggedIn, clearCart } = useContext(Context);
+  const { userInfos, globalProducts, isLoggedIn, clearCart, checkoutInfos, setCheckoutInfos } = useContext(Context);
   const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
 
@@ -86,7 +86,17 @@ function Cart() {
         </div>
         <button
           type="button"
-          onClick={() => isLoggedIn ? '' : navigate('/sign-up')}
+          onClick={() => {
+            if (isLoggedIn) {
+              setCheckoutInfos({
+                groups,
+                total: calculateTotal(),
+              });
+              navigate('/checkout', { state: { groups, total: calculateTotal() } });
+            } else {
+              navigate('/sign-in');
+            }
+          }}
         >
           {isLoggedIn ? 'Fechar compra' : 'Criar conta'}
         </button>
