@@ -44,7 +44,7 @@ function Cart() {
   return (
     <StyledCart>
       <StyledHeader>
-      <img alt="logo" src={Logo} />
+        <img alt="logo" src={Logo} />
         <h3>Meu Carrinho</h3>
         <button
           type="button"
@@ -88,7 +88,13 @@ function Cart() {
         </div>
         <button
           type="button"
-          onClick={() => isLoggedIn ? '' : navigate('/sign-up')}
+          onClick={() => {
+            if (isLoggedIn) {
+              navigate('/checkout', { state: { groups, total: calculateTotal() } });
+            } else {
+              navigate('/sign-in');
+            }
+          }}
         >
           {isLoggedIn ? 'Fechar compra' : 'Criar conta'}
         </button>

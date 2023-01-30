@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Context from "../context/Context";
 
-function Header({ userInfos, Logo, handleSearch}) {
+function Header({ userInfos, Logo, handleSearch }) {
   const {
     globalProducts,
     setTotal,
